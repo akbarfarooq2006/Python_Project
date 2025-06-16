@@ -32,7 +32,7 @@ st.subheader("Side Hustle Ideas")
 if st.button("Generate Hustle"):
     with st.spinner("Getting Hustle Ideas"):
         time.sleep(1)
-    st.success(fetch_hastle())
+    st.info(fetch_hastle())
 
 
 

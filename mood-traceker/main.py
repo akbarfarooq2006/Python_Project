@@ -10,12 +10,21 @@ MOOD_FILE = "mood_log.csv"
 
 def load_mood_data():
     if not os.path.exists(MOOD_FILE):
-        return pd.DataFrame(columns=["Date", "Mood"])
-    return pd.read_csv(MOOD_FILE, encoding = "utf-8")
-
+        with open(MOOD_FILE, "w", newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Mood"])
+    if os.stat(MOOD_FILE).st_size == 0:
+        with open(MOOD_FILE, "w", encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Mood"])
+    if os.stat(MOOD_FILE).st_size > 0:
+        return pd.read_csv(MOOD_FILE, encoding='utf-8')
 
 def save_mood_data(date,mood):
     with open(MOOD_FILE, "a" , encoding = "utf-8" ) as file:
+        if os.stat(MOOD_FILE).st_size == 0:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Mood"])
         writer = csv.writer(file)
         writer.writerow([date, mood])
         
@@ -39,15 +48,16 @@ if st.button("Log Mood"):
 
 
 data = load_mood_data()
-# st.write(data)
 if not data.empty:
     st.subheader("Mood Trends over time")
-    # data["Date"] = pd.to_datetime(data["Date"])
+    data["Date"] = pd.to_datetime(data["Date"])
     
     mood_counts = data.groupby("Mood").count()["Date"]
     st.bar_chart(mood_counts)
-    st.write(mood_counts)
-    
+    # st.write(mood_counts)
+else:
+    st.info ("no data available")
+
     
 
 

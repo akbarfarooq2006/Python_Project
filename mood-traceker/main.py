@@ -54,7 +54,6 @@ if not data.empty:
     
     mood_counts = data.groupby("Mood").count()["Date"]
     st.bar_chart(mood_counts)
-    # st.write(mood_counts)
 else:
     st.info ("no data available")
 
